@@ -1,12 +1,12 @@
-# Contributing to EmojiForge
+# Contributing to EmojiCraft
 
 Thanks for your interest in contributing!
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/albertolicea00/EmojiForge.git
-cd EmojiForge
+git clone https://github.com/albertolicea00/EmojiCraft.git
+cd EmojiCraft
 python3 -m http.server 8080
 # open http://localhost:8080
 ```

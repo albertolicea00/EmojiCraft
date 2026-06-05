@@ -16,7 +16,7 @@ dev:
 	@python3 -m http.server $(PORT) &
 	@sleep 0.5
 	@open http://localhost:$(PORT) 2>/dev/null || xdg-open http://localhost:$(PORT) 2>/dev/null || true
-	@echo "→ EmojiForge running at http://localhost:$(PORT) — Ctrl+C to stop"
+	@echo "→ EmojiCraft running at http://localhost:$(PORT) — Ctrl+C to stop"
 	@wait
 
 ## deploy: deploy to Vercel (requires vercel CLI)

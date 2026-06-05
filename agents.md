@@ -1,4 +1,4 @@
-# EmojiForge — Claude Code Agent Guide
+# EmojiCraft — Claude Code Agent Guide
 
 This file describes how to use Claude Code agents to extend, maintain, and improve this project.
 

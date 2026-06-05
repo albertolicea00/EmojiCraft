@@ -1,162 +1,212 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EmojiForge</title>
-  <meta name="description" content="Export any emoji in any style, size, and format." />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EmojiCraft</title>
+    <meta
+      name="description"
+      content="Export any emoji in any style, size, and format."
+    />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32"   href="assets/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="16x16"   href="assets/favicon-16.png" />
-  <link rel="icon" type="image/png"                  href="favicon.png" />
-  <link rel="apple-touch-icon" sizes="180x180"       href="assets/apple-touch-icon.png" />
-  <link rel="manifest" href="assets/site.webmanifest" />
-  <meta name="theme-color" content="#7c3aed" />
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon-16.png"
+    />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="assets/site.webmanifest" />
+    <meta name="theme-color" content="#7c3aed" />
 
-  <!-- Open Graph -->
-  <meta property="og:title"       content="EmojiForge" />
-  <meta property="og:description" content="Export any emoji in any style, size, and format." />
-  <meta property="og:image"       content="assets/og-image.png" />
-  <meta property="og:type"        content="website" />
-  <meta name="twitter:card"       content="summary_large_image" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="EmojiCraft" />
+    <meta
+      property="og:description"
+      content="Export any emoji in any style, size, and format."
+    />
+    <meta property="og:image" content="assets/og-image.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="stylesheet" href="css/styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-</head>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  </head>
 
-<body>
+  <body>
+    <!-- ── Theme toggle ── -->
+    <button id="themeBtn" class="theme-btn" title="Toggle dark mode">🌙</button>
 
-  <!-- ── Theme toggle ── -->
-  <button id="themeBtn" class="theme-btn" title="Toggle dark mode">🌙</button>
-
-  <!-- ══════════════════════════════════════════════════════════
+    <!-- ══════════════════════════════════════════════════════════
        APP LAYOUT — left: preview   right: picker
   ══════════════════════════════════════════════════════════ -->
-  <div class="app">
-
-    <!-- ── LEFT: preview & export controls ── -->
-    <section class="preview-section">
-
-      <!-- Big emoji display -->
-      <div class="emoji-display" id="emojiDisplay">
-        <div class="emoji-placeholder">
-          <span>⚒</span>
-          <p>Pick an emoji</p>
-        </div>
-      </div>
-
-      <!-- Export controls (visible after selection) -->
-      <div class="export-controls" id="exportControls">
-
-        <!-- Download button -->
-        <button class="dl-btn" id="dlBtn" onclick="handleDownload()">
-          <span id="dlBtnLabel">Download</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-        </button>
-
-        <!-- Format row -->
-        <div class="options-row">
-          <div class="seg-group" id="fmtGroup">
-            <button class="seg seg-active" data-fmt="svg">SVG</button>
-            <button class="seg" data-fmt="png">PNG</button>
-            <button class="seg" data-fmt="webp">WebP</button>
+    <div class="app">
+      <!-- ── LEFT: preview & export controls ── -->
+      <section class="preview-section">
+        <!-- Big emoji display -->
+        <div class="emoji-display" id="emojiDisplay">
+          <div class="emoji-placeholder">
+            <span>⚒</span>
+            <p>Pick an emoji</p>
           </div>
         </div>
 
-        <!-- Size row (hidden for SVG) -->
-        <div class="options-row" id="sizeRow">
-          <div class="seg-group" id="szGroup">
-            <button class="seg" data-sz="64">64</button>
-            <button class="seg seg-active" data-sz="128">128</button>
-            <button class="seg" data-sz="256">256</button>
-            <button class="seg" data-sz="512">512</button>
-            <button class="seg" data-sz="1024">1024</button>
-            <button class="seg" data-sz="custom">…</button>
-          </div>
-          <input type="number" id="customSz" value="256" min="16" max="4096"
-            placeholder="px" class="custom-sz hidden" />
-        </div>
-
-        <!-- ZIP toggle -->
-        <div class="zip-row">
-          <label class="zip-label">
-            <div class="toggle" id="zipTog" onclick="toggleZip()">
-              <div class="toggle-knob"></div>
-            </div>
-            <span>All sizes as ZIP</span>
-          </label>
-          <button class="copy-btn" id="copyBtn" onclick="handleCopy()">Copy</button>
-        </div>
-
-        <!-- Hint -->
-        <p class="hint" id="hint">Choose a format and click Download</p>
-      </div>
-
-      <!-- Style selector (always visible) -->
-      <div class="style-selector" id="styleSelector">
-        <!-- filled by JS -->
-      </div>
-
-    </section>
-
-    <!-- ── RIGHT: emoji picker card ── -->
-    <section class="picker-section">
-      <div class="picker-card">
-
-        <!-- Category tabs -->
-        <div class="cat-tabs" id="catTabs">
-          <!-- filled by JS -->
-        </div>
-
-        <!-- Search -->
-        <div class="search-row">
-          <div class="search-wrap">
-            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        <!-- Export controls (visible after selection) -->
+        <div class="export-controls" id="exportControls">
+          <!-- Download button -->
+          <button class="dl-btn" id="dlBtn" onclick="handleDownload()">
+            <span id="dlBtnLabel">Download</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            <input id="searchInput" type="search" placeholder="Search" autocomplete="off" spellcheck="false" class="search-input" />
+          </button>
+
+          <!-- Format row -->
+          <div class="options-row">
+            <div class="seg-group" id="fmtGroup">
+              <button class="seg seg-active" data-fmt="svg">SVG</button>
+              <button class="seg" data-fmt="png">PNG</button>
+              <button class="seg" data-fmt="webp">WebP</button>
+            </div>
           </div>
+
+          <!-- Size row (hidden for SVG) -->
+          <div class="options-row" id="sizeRow">
+            <div class="seg-group" id="szGroup">
+              <button class="seg" data-sz="64">64</button>
+              <button class="seg seg-active" data-sz="128">128</button>
+              <button class="seg" data-sz="256">256</button>
+              <button class="seg" data-sz="512">512</button>
+              <button class="seg" data-sz="1024">1024</button>
+              <button class="seg" data-sz="custom">…</button>
+            </div>
+            <input
+              type="number"
+              id="customSz"
+              value="256"
+              min="16"
+              max="4096"
+              placeholder="px"
+              class="custom-sz hidden"
+            />
+          </div>
+
+          <!-- ZIP toggle -->
+          <div class="zip-row">
+            <label class="zip-label">
+              <div class="toggle" id="zipTog" onclick="toggleZip()">
+                <div class="toggle-knob"></div>
+              </div>
+              <span>All sizes as ZIP</span>
+            </label>
+            <button class="copy-btn" id="copyBtn" onclick="handleCopy()">
+              Copy
+            </button>
+          </div>
+
+          <!-- Hint -->
+          <p class="hint" id="hint">Choose a format and click Download</p>
         </div>
 
-        <!-- Category label + count -->
-        <div class="grid-header">
-          <span id="gridLabel">All Emojis</span>
-          <span id="gridCount" class="grid-count"></span>
-        </div>
-
-        <!-- Skeleton -->
-        <div id="skeleton" class="skeleton-grid">
+        <!-- Style selector (always visible) -->
+        <div class="style-selector" id="styleSelector">
           <!-- filled by JS -->
         </div>
+      </section>
 
-        <!-- Grid -->
-        <div id="emojiGrid" class="emoji-grid hidden"></div>
+      <!-- ── RIGHT: emoji picker card ── -->
+      <section class="picker-section">
+        <div class="picker-card">
+          <!-- Category tabs -->
+          <div class="cat-tabs" id="catTabs">
+            <!-- filled by JS -->
+          </div>
 
-        <!-- Empty -->
-        <div id="emptyState" class="empty-state hidden">
-          <span>🔍</span>
-          <p>No results for "<span id="emptyQuery"></span>"</p>
+          <!-- Search -->
+          <div class="search-row">
+            <div class="search-wrap">
+              <svg
+                class="search-icon"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search"
+                autocomplete="off"
+                spellcheck="false"
+                class="search-input"
+              />
+            </div>
+          </div>
+
+          <!-- Category label + count -->
+          <div class="grid-header">
+            <span id="gridLabel">All Emojis</span>
+            <span id="gridCount" class="grid-count"></span>
+          </div>
+
+          <!-- Skeleton -->
+          <div id="skeleton" class="skeleton-grid">
+            <!-- filled by JS -->
+          </div>
+
+          <!-- Grid -->
+          <div id="emojiGrid" class="emoji-grid hidden"></div>
+
+          <!-- Empty -->
+          <div id="emptyState" class="empty-state hidden">
+            <span>🔍</span>
+            <p>No results for "<span id="emptyQuery"></span>"</p>
+          </div>
         </div>
+      </section>
+    </div>
 
-      </div>
-    </section>
+    <!-- Footer -->
+    <footer class="footer">
+      Made with ❤️ by Alberto &nbsp;·&nbsp; EmojiCraft
+    </footer>
 
-  </div>
+    <!-- Toast -->
+    <div id="toast" class="toast">
+      <span id="toastIcon"></span>
+      <span id="toastText"></span>
+    </div>
 
-  <!-- Footer -->
-  <footer class="footer">Made with ❤️ by Alberto &nbsp;·&nbsp; EmojiForge</footer>
-
-  <!-- Toast -->
-  <div id="toast" class="toast">
-    <span id="toastIcon"></span>
-    <span id="toastText"></span>
-  </div>
-
-  <script src="js/sources.js"></script>
-  <script src="js/export.js"></script>
-  <script src="js/app.js"></script>
-</body>
+    <script src="js/sources.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>

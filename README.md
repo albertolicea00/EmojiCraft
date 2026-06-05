@@ -1,8 +1,8 @@
-# 🦄 EmojiForge :: cReaTe. cRaFt. eXpoRt.
+# 🦄 EmojiCraft :: cReaTe. cRaFt. eXpoRt.
 
 > Any style. Any size. Any format. One click.
 
-**[→ Try it live](https://EmojiForge.vercel.app)**
+**[→ Try it live](https://EmojiCraft.vercel.app)**
 
 ---
 

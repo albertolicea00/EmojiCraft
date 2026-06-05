@@ -10,7 +10,7 @@ const state = {
   map:      new Map(),   // unified → emoji obj
   selected: null,        // currently selected emoji obj
   category: 'All',
-  style:    'twemoji',
+  style:    'system',
   fmt:      'svg',
   size:     128,
   zip:      false,
