@@ -1,4 +1,4 @@
-.PHONY: serve open dev deploy favicons help
+.PHONY: serve open dev deploy favicons download-assets help
 
 PORT ?= 8080
 
@@ -28,6 +28,12 @@ favicons:
 	@command -v node >/dev/null || (echo "Node.js required"; exit 1)
 	@node -e "require('sharp')" 2>/dev/null || npm install sharp --save-dev
 	node scripts/gen-favicons.js
+
+## download-assets: download all emoji SVGs to assets/emoji/ for self-hosting
+download-assets:
+	@echo "→ Downloading emoji assets (CDN → assets/emoji/)"
+	@bash scripts/download-assets.sh $(ARGS)
+	@echo "→ Done. Set LOCAL_ASSETS = true in js/sources.js to use local files."
 
 ## help: show this help
 help:

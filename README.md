@@ -44,6 +44,49 @@ python3 -m http.server 8080
 
 or `npx serve .` or `make serve`.
 
+## Self-hosting emoji assets 📦
+
+By default the app loads emoji SVGs from public CDNs (jsDelivr). If you want to serve them yourself — for offline use, faster loads, or no external dependencies — you can download everything locally.
+
+### Download once (manual)
+
+```bash
+make download-assets
+# or directly:
+bash scripts/download-assets.sh
+```
+
+Downloads ~1 800 emojis × 4 styles → `assets/emoji/`. Then flip the flag in `js/sources.js`:
+
+```js
+const LOCAL_ASSETS = true;   // was false
+```
+
+Options:
+
+```bash
+make download-assets ARGS="--styles twemoji noto"   # specific styles only
+make download-assets ARGS="--force"                  # re-download existing files
+make download-assets ARGS="--jobs 16"                # more parallelism (default: 8)
+```
+
+### Auto-update via GitHub Action
+
+A workflow is included at `.github/workflows/update-emoji-assets.yml`. It runs **manually only** by default (no cron). To trigger it:
+
+**GitHub → Actions → Update Emoji Assets → Run workflow**
+
+It downloads fresh assets and opens a **Pull Request** for you to review before merging. No direct commits to `main`.
+
+To enable the weekly schedule, uncomment these lines in the workflow file:
+
+```yaml
+# schedule:
+#   - cron: '0 4 * * 0'   # every Sunday 04:00 UTC
+```
+
+---
+
 ## Contributing 🤝
 
 Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
