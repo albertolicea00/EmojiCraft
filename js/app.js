@@ -9,7 +9,8 @@ const state = {
   filtered: [],          // currently visible
   map:      new Map(),   // unified → emoji obj
   selected: null,        // currently selected emoji obj
-  category: 'All',
+  category: 'smileys',
+  tone:     '',        // '' | '1F3FB' | '1F3FC' | '1F3FD' | '1F3FE' | '1F3FF'
   style:    'system',
   fmt:      'svg',
   size:     128,
@@ -60,7 +61,8 @@ async function init() {
     document.getElementById('emojiGrid').classList.remove('hidden');
 
     renderCategoryTabs();
-    renderGrid(state.filtered);
+    renderSkinTones();
+    filterAndRender();
     updateFooterSource();
     syncSizeRow();
   } catch (err) {
@@ -89,11 +91,24 @@ function renderStyleBtns() {
 }
 
 function renderCategoryTabs() {
-  const cats = ['All', ...new Set(state.emojis.map(e => e.category))];
-  document.getElementById('catTabs').innerHTML = cats.map(c =>
-    `<button class="cat-tab ${c === state.category ? 'active' : ''}"
-      data-cat="${escAttr(c)}" title="${c}">${CAT_ICONS[c] || '📂'}</button>`
+  document.getElementById('catTabs').innerHTML = CAT_TABS.map(t =>
+    `<button class="cat-tab ${t.id === state.category ? 'active' : ''}"
+      data-cat="${t.id}" title="${t.label}">${t.icon}</button>`
   ).join('');
+}
+
+function renderSkinTones() {
+  document.getElementById('skinTones').innerHTML = SKIN_TONES.map(t =>
+    `<button class="skin-dot ${t.code === state.tone ? 'active' : ''}"
+      data-tone="${t.code}" title="${t.label}"
+      style="background:${t.color}"></button>`
+  ).join('');
+}
+
+// Returns the tone-adjusted unified codepoint for an emoji
+function getTonedUnified(e) {
+  if (!state.tone || !e.skin_variations) return e.unified;
+  return (e.skin_variations[state.tone] || e).unified;
 }
 
 function renderGrid(emojis) {
@@ -113,19 +128,21 @@ function renderGrid(emojis) {
   }
 
   empty.classList.add('hidden');
-  head.textContent  = state.category === 'All' ? 'All Emojis' : state.category;
+  const tab = CAT_TABS.find(t => t.id === state.category);
+  head.textContent  = tab ? tab.label : 'All';
   count.textContent = emojis.length.toLocaleString();
 
   const src = SOURCES[state.style];
 
   grid.innerHTML = emojis.map(e => {
-    const ch  = toChar(e);
-    const sel = state.selected?.unified === e.unified ? ' sel' : '';
+    const unified = getTonedUnified(e);
+    const ch      = toChar({ unified });
+    const sel     = state.selected?.unified === e.unified ? ' sel' : '';
     let inner;
     if (src.font) {
       inner = `<span style="font-family:'${src.font.family}',serif;pointer-events:none">${ch}</span>`;
     } else if (src.isPng) {
-      const url = src.url(e.unified);
+      const url = src.url(unified);
       inner = `<img src="${url}" alt="${ch}" loading="lazy" decoding="async" crossorigin="anonymous"
           onerror="this.outerHTML='<span>${ch}</span>'">`;
     } else {
@@ -136,25 +153,24 @@ function renderGrid(emojis) {
 }
 
 function updatePreview() {
-  const e   = state.selected;
+  const e = state.selected;
   if (!e) return;
 
-  const src  = SOURCES[state.style];
-  const url  = src.isSystem ? null : src.url(e.unified);
-  const ch   = toChar(e);
-  const wrap = document.getElementById('emojiDisplay');
+  const unified = getTonedUnified(e);
+  const src     = SOURCES[state.style];
+  const url     = src.isSystem ? null : src.url(unified);
+  const ch      = toChar({ unified });
+  const wrap    = document.getElementById('emojiDisplay');
 
   wrap.innerHTML = url
     ? `<img src="${url}" alt="${ch}" crossorigin="anonymous"
         onerror="this.outerHTML='<span class=emoji-char>${ch}</span>'">`
     : `<span class="emoji-char">${ch}</span>`;
 
-  // Update download button label
-  const ext  = state.zipMode ? 'zip' : state.fmt;
+  const ext = state.zipMode ? 'zip' : state.fmt;
   document.getElementById('dlBtnLabel').textContent =
     `Download ${e.short_name}.${ext}`;
 
-  // Show controls
   document.getElementById('exportControls').classList.remove('hidden');
 }
 
@@ -196,21 +212,30 @@ function setStyle(key) {
 
 function setCategory(cat) {
   state.category = cat;
-  // Update tabs
   document.querySelectorAll('.cat-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.cat === cat));
   filterAndRender();
 }
 
+function setTone(code) {
+  state.tone = code;
+  renderSkinTones();
+  renderGrid(state.filtered);
+  if (state.selected) updatePreview();
+}
+
 function filterAndRender() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const q   = document.getElementById('searchInput').value.trim().toLowerCase();
+  const tab = CAT_TABS.find(t => t.id === state.category);
   state.filtered = state.emojis.filter(e => {
-    const catOk = state.category === 'All' || e.category === state.category;
-    if (!catOk) return false;
-    if (!q) return true;
-    return e.short_name.includes(q)
-      || (e.short_names && e.short_names.some(n => n.includes(q)))
-      || e.name.toLowerCase().includes(q);
+    if (e.category === 'Component') return false; // hide skin-tone components
+    if (q) {
+      // search spans all categories
+      return e.short_name.includes(q)
+        || (e.short_names && e.short_names.some(n => n.includes(q)))
+        || e.name.toLowerCase().includes(q);
+    }
+    return tab ? tab.cats.includes(e.category) : true;
   });
   renderGrid(state.filtered);
 }
@@ -288,6 +313,12 @@ function bindEvents() {
   document.getElementById('catTabs').addEventListener('click', e => {
     const tab = e.target.closest('.cat-tab');
     if (tab) setCategory(tab.dataset.cat);
+  });
+
+  // Skin tone picker (delegation)
+  document.getElementById('skinTones').addEventListener('click', e => {
+    const btn = e.target.closest('.skin-dot');
+    if (btn) setTone(btn.dataset.tone);
   });
 
   // Emoji grid (delegation)
