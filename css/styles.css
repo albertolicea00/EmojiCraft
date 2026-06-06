@@ -91,29 +91,45 @@ input {
   background: var(--text3);
 }
 
+/* ── Top nav ── */
+.style-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  transition: background 0.25s, border-color 0.25s;
+}
+
+.style-nav-inner {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  justify-content: center;
+}
+
 /* ── Theme toggle button ── */
 .theme-btn {
-  position: fixed;
-  top: 16px;
-  right: 20px;
-  z-index: 100;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+  width: 52px;
+  height: 100%;
+  border: none;
+  border-left: 1px solid var(--border);
+  background: none;
   cursor: pointer;
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background 0.2s,
-    box-shadow 0.2s;
+  transition: background 0.2s;
+  color: var(--text2);
 }
 .theme-btn:hover {
-  box-shadow: var(--shadow-md);
+  background: var(--surface2);
 }
 
 /* ═══════════════════════════════════════
@@ -125,7 +141,7 @@ input {
   align-items: center;
   justify-content: center;
   gap: 56px;
-  min-height: 100dvh;
+  min-height: calc(100dvh - 49px);
   padding: 40px 24px;
 }
 
@@ -365,44 +381,28 @@ input {
   line-height: 1.4;
 }
 
-/* Style selector */
-.style-selector {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
+/* Style nav buttons */
 .style-btn {
   background: none;
   border: none;
+  border-bottom: 2px solid transparent;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text3);
-  padding: 2px 0;
-  transition: color 0.15s;
+  color: var(--text2);
+  padding: 14px 22px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
   position: relative;
-}
-.style-btn::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transition: transform 0.15s;
+  bottom: -1px;
+  white-space: nowrap;
 }
 .style-btn:hover {
   color: var(--text);
+  background: var(--surface2);
 }
 .style-btn.active {
   color: var(--accent);
-}
-.style-btn.active::after {
-  transform: scaleX(1);
+  border-bottom-color: var(--accent);
 }
 
 /* ── RIGHT: picker card ── */

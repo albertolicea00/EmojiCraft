@@ -123,4 +123,4 @@ If this saved you time, you can [buy me a coffee ☕](https://buymeacoffee.com/a
 
 ---
 
-Made with ❤️ by [Alberto](https://github.com/albertolicea00)
+Made with 💛 by [Alberto](https://github.com/albertolicea00)

@@ -46,8 +46,11 @@
   </head>
 
   <body>
-    <!-- ── Theme toggle ── -->
-    <button id="themeBtn" class="theme-btn" title="Toggle dark mode">🌙</button>
+    <!-- ── Top nav ── -->
+    <header class="style-nav">
+      <div class="style-nav-inner" id="styleSelector"><!-- filled by JS --></div>
+      <button id="themeBtn" class="theme-btn" title="Toggle dark mode">🌙</button>
+    </header>
 
     <!-- ══════════════════════════════════════════════════════════
        APP LAYOUT — left: preview   right: picker
@@ -141,10 +144,6 @@
           <p class="hint" id="hint">Choose a format and click Download</p>
         </div>
 
-        <!-- Style selector (always visible) -->
-        <div class="style-selector" id="styleSelector">
-          <!-- filled by JS -->
-        </div>
       </section>
 
       <!-- ── RIGHT: emoji picker card ── -->
@@ -206,7 +205,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-      Made with ❤️ by Alberto &nbsp;·&nbsp; EmojiCraft
+      Made with 💛 by Alberto &nbsp;·&nbsp; EmojiCraft
     </footer>
 
     <!-- Toast -->
