@@ -4,7 +4,7 @@ name: Update Emoji Assets
 on:
   workflow_dispatch:        # manual trigger from GitHub UI → Actions tab
   # schedule:
-  #   - cron: '0 4 * * 0'  # every Sunday 04:00 UTC — uncomment to enable
+  #   - cron: '0 4 1 * *'  # 1st of every month, 04:00 UTC — uncomment to enable
 
 # ── Job ───────────────────────────────────────────────────────────
 jobs:
@@ -24,9 +24,9 @@ jobs:
           python-version: '3.12'
 
       - name: Download emoji assets
+        # No --force → skips files already committed. Only new/changed emojis are downloaded.
+        # If nothing changed, create-pull-request detects no diff and skips PR creation automatically.
         run: python3 scripts/download-assets.py --jobs 16
-        env:
-          JOBS: 16
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
