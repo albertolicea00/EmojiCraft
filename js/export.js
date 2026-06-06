@@ -8,6 +8,7 @@
 async function fetchSvg(emoji) {
   const src = SOURCES[state.style];
   if (src.isSystem) throw new Error('System style has no SVG');
+  if (src.isPng)    throw new Error('PNG-only style — no SVG available');
   const url = src.url(emoji.unified);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status} — ${url}`);

@@ -61,6 +61,7 @@ async function init() {
 
     renderCategoryTabs();
     renderGrid(state.filtered);
+    updateFooterSource();
     syncSizeRow();
   } catch (err) {
     document.getElementById('skeleton').innerHTML = `
@@ -123,9 +124,11 @@ function renderGrid(emojis) {
     let inner;
     if (src.font) {
       inner = `<span style="font-family:'${src.font.family}',serif;pointer-events:none">${ch}</span>`;
+    } else if (src.isPng) {
+      const url = src.url(e.unified);
+      inner = `<img src="${url}" alt="${ch}" loading="lazy" decoding="async" crossorigin="anonymous"
+          onerror="this.outerHTML='<span>${ch}</span>'">`;
     } else {
-      // No font available (JoyPixels, System) → system emoji, zero network requests.
-      // Styled SVG loads in the preview panel on click.
       inner = `<span>${ch}</span>`;
     }
     return `<div class="emoji-cell${sel}" data-u="${e.unified}" title=":${e.short_name}:">${inner}</div>`;
@@ -172,11 +175,22 @@ function syncDlLabel() {
 
 // ── Setters ────────────────────────────────────────────────────
 
+function updateFooterSource() {
+  const el = document.getElementById('footerSource');
+  if (!el) return;
+  const { powered } = SOURCES[state.style] || {};
+  if (!powered) return;
+  el.innerHTML = powered.url
+    ? `Powered by <a href="${powered.url}" target="_blank" rel="noopener">${powered.text}</a>`
+    : `Powered by ${powered.text}`;
+}
+
 function setStyle(key) {
   state.style = key;
   renderStyleBtns();
   ensureFont(SOURCES[key]);
   renderGrid(state.filtered);
+  updateFooterSource();
   if (state.selected) updatePreview();
 }
 
@@ -218,8 +232,13 @@ async function handleDownload() {
       triggerDownload(await exportZipFormats(e, state.size), `${e.short_name}_all_formats.zip`);
       toast('ZIP downloaded! (all formats)', '✅');
     } else if (state.fmt === 'svg') {
-      triggerDownload(await exportSvg(e), `${e.short_name}.svg`);
-      toast('SVG downloaded!', '✅');
+      if (SOURCES[state.style].isPng) {
+        triggerDownload(await exportRaster(e, 'png', state.size), `${e.short_name}_${state.size}px.png`);
+        toast('SVG not available for this style — PNG downloaded instead', '⚠️');
+      } else {
+        triggerDownload(await exportSvg(e), `${e.short_name}.svg`);
+        toast('SVG downloaded!', '✅');
+      }
     } else if (state.fmt === 'ico') {
       triggerDownload(
         await exportIco(e, state.size),

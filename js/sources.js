@@ -3,30 +3,32 @@
 ───────────────────────────────────────────── */
 
 // Set to true after running `make download-assets` to serve from local files.
-// Leave false to load from CDN (default).
 const LOCAL_ASSETS = false;
 
 const EMOJI_DATA_URL = LOCAL_ASSETS
   ? 'assets/emoji/emoji.json'
   : 'https://cdn.jsdelivr.net/npm/emoji-datasource@14.0.0/emoji.json';
 
-// Font sources for grid thumbnails (one file, zero per-emoji requests).
-// Grid uses font; preview panel uses SVG for full quality.
-// JoyPixels has no free COLR font — its grid falls back to SVG lazy-load.
+const DS = 'https://cdn.jsdelivr.net/npm/emoji-datasource';
+
 const SOURCES = {
-  twemoji: {
-    label: 'Twitter',
-    font: {
-      family: 'Twemoji Mozilla',
-      cdn:   'https://cdn.jsdelivr.net/npm/twemoji-colr-font@0.7.0/fonts/TwemojiMozilla.woff2',
-      local: 'assets/fonts/TwemojiMozilla.woff2',
-    },
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/twemoji/${cp.toLowerCase()}.svg`
-      : `https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${cp.toLowerCase()}.svg`,
+  system: {
+    label:   'System',
+    powered: { text: 'System emoji', url: null },
+    url:     () => null,
+    isSystem: true,
   },
-  noto: {
-    label: 'Google',
+
+  twitter: {
+    label:   'X (Twitter)',
+    powered: { text: 'Twemoji (Twitter)', url: 'https://github.com/jdecked/twemoji' },
+    isPng:   true,
+    url:     cp => `${DS}-twitter@14.0.0/img/twitter/64/${cp.toLowerCase()}.png`,
+  },
+
+  google: {
+    label:   'Google',
+    powered: { text: 'Noto Color Emoji', url: 'https://fonts.google.com/noto/specimen/Noto+Color+Emoji' },
     font: {
       family:      'Noto Color Emoji',
       googleFonts: 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji',
@@ -39,27 +41,19 @@ const SOURCES = {
         : `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/svg/emoji_u${parts.join('_')}.svg`;
     },
   },
-  openmoji: {
-    label: 'OpenMoji',
-    font: {
-      family: 'OpenMoji',
-      cdn:   'https://cdn.jsdelivr.net/npm/openmoji@15.0.0/font/OpenMoji-color-glyf_colr_1.woff2',
-      local: 'assets/fonts/OpenMoji.woff2',
-    },
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/openmoji/${cp.toUpperCase()}.svg`
-      : `https://cdn.jsdelivr.net/npm/openmoji@15.0.0/color/svg/${cp.toUpperCase()}.svg`,
+
+  apple: {
+    label:   'Apple',
+    powered: { text: 'Apple Color Emoji', url: 'https://emojipedia.org/apple' },
+    isPng:   true,
+    url:     cp => `${DS}-apple@14.0.0/img/apple/64/${cp.toLowerCase()}.png`,
   },
-  joypixels: {
-    label: 'JoyPixels',
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/joypixels/${cp.toLowerCase()}.svg`
-      : `https://cdn.jsdelivr.net/npm/emoji-toolkit@8.0.0/extras/svgs/${cp.toLowerCase()}.svg`,
-  },
-  system: {
-    label: 'System',
-    url: () => null,
-    isSystem: true,
+
+  facebook: {
+    label:   'Meta (Facebook)',
+    powered: { text: 'Facebook emoji', url: 'https://emojipedia.org/facebook' },
+    isPng:   true,
+    url:     cp => `${DS}-facebook@14.0.0/img/facebook/64/${cp.toLowerCase()}.png`,
   },
 };
 
