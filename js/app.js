@@ -189,6 +189,12 @@ async function handleDownload() {
     } else if (state.fmt === 'svg') {
       triggerDownload(await exportSvg(e), `${e.short_name}.svg`);
       toast('SVG downloaded!', '✅');
+    } else if (state.fmt === 'ico') {
+      triggerDownload(
+        await exportIco(e, state.size),
+        `${e.short_name}_${state.size}px.ico`
+      );
+      toast(`ICO ${state.size}px downloaded!`, '✅');
     } else {
       triggerDownload(
         await exportRaster(e, state.fmt, state.size),
@@ -208,6 +214,11 @@ async function handleCopy() {
   if (!state.selected) return;
   const e = state.selected;
   try {
+    if (state.fmt === 'ico') {
+      await navigator.clipboard.writeText(toChar(e));
+      toast('Character copied!', '✅');
+      return;
+    }
     if (state.fmt === 'svg' && !SOURCES[state.style].isSystem) {
       await navigator.clipboard.writeText(await fetchSvg(e));
       toast('SVG code copied!', '✅');

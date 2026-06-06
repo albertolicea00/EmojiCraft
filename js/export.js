@@ -102,6 +102,37 @@ async function exportZip(emoji) {
 }
 
 /**
+ * Export single emoji as ICO Blob (modern PNG-in-ICO format).
+ */
+async function exportIco(emoji, size) {
+  const canvas   = await toCanvas(emoji, size);
+  const pngBlob  = await canvasBlob(canvas, 'png');
+  const pngBytes = new Uint8Array(await pngBlob.arrayBuffer());
+
+  const offset = 22; // 6 (ICONDIR) + 16 (ICONDIRENTRY)
+  const buf    = new ArrayBuffer(offset + pngBytes.length);
+  const dv     = new DataView(buf);
+
+  // ICONDIR
+  dv.setUint16(0, 0, true); // reserved
+  dv.setUint16(2, 1, true); // type: ICO
+  dv.setUint16(4, 1, true); // count
+
+  // ICONDIRENTRY
+  dv.setUint8(6,  size >= 256 ? 0 : size); // width  (0 = 256)
+  dv.setUint8(7,  size >= 256 ? 0 : size); // height
+  dv.setUint8(8,  0);                       // color count
+  dv.setUint8(9,  0);                       // reserved
+  dv.setUint16(10, 1,  true);               // planes
+  dv.setUint16(12, 32, true);               // bpp
+  dv.setUint32(14, pngBytes.length, true);  // data size
+  dv.setUint32(18, offset,          true);  // data offset
+
+  new Uint8Array(buf, offset).set(pngBytes);
+  return new Blob([buf], { type: 'image/x-icon' });
+}
+
+/**
  * Trigger a browser file download.
  */
 function triggerDownload(blob, filename) {
