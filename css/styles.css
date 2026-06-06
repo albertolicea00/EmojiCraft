@@ -121,23 +121,40 @@ input {
 /* ── Theme toggle button ── */
 .theme-btn {
   flex-shrink: 0;
-  width: 52px;
+  width: 56px;
   height: 100%;
   border: none;
   border-left: 1px solid var(--border);
   background: none;
   cursor: pointer;
-  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
-  color: var(--text2);
+  position: relative;
+  overflow: hidden;
 }
 .theme-btn:hover {
   background: var(--surface2);
 }
-
+.theme-btn .btn-moon,
+.theme-btn .btn-sun {
+  height: 32px;
+  width: auto;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+[data-theme="light"] .theme-btn .btn-moon {
+  opacity: 1;
+  transform: scale(1);
+}
+[data-theme="dark"] .theme-btn .btn-sun {
+  opacity: 1;
+  transform: scale(1);
+}
 /* ═══════════════════════════════════════
    APP LAYOUT
 ═══════════════════════════════════════ */
@@ -150,6 +167,8 @@ input {
   flex: 1;
   overflow: hidden;
   padding: 32px 24px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── LEFT: preview section ── */
@@ -624,6 +643,8 @@ input {
   padding: 10px 20px;
   font-size: 0.76rem;
   color: var(--text3);
+  position: relative;
+  z-index: 1;
   background: var(--surface);
   border-top: 1px solid var(--border);
   flex-shrink: 0;

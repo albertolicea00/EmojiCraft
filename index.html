@@ -49,7 +49,11 @@
     <!-- ── Top nav ── -->
     <header class="style-nav">
       <div class="style-nav-inner" id="styleSelector"><!-- filled by JS --></div>
-      <button id="themeBtn" class="theme-btn" title="Toggle dark mode">🌙</button>
+      <button id="themeBtn" class="theme-btn" title="Toggle dark mode">
+        <!-- light mode → moon invites dark; dark mode → sun invites light -->
+        <img class="btn-moon" src="assets/clipart497278.webp" alt="Switch to dark mode" />
+        <img class="btn-sun"  src="assets/clipart770858.webp" alt="Switch to light mode" />
+      </button>
     </header>
 
     <!-- ══════════════════════════════════════════════════════════
@@ -206,7 +210,7 @@
     <!-- Footer -->
     <footer class="footer">
       <span id="footerSource" class="footer-source">Powered by System emoji</span>
-      <span>Made with 💛 by <a href="https://github.com/albertolicea00" target="_blank" rel="noopener">Alberto</a> &nbsp;·&nbsp; EmojiCraft</span>
+      <span>Made with 💛 by <a href="https://github.com/albertolicea00" target="_blank" rel="noopener">Alberto</a></span>
       <span class="footer-actions">
         <a class="footer-coffee" href="https://buymeacoffee.com/albertolicea00" target="_blank" rel="noopener">☕ Support</a>
         <a class="footer-github" href="https://github.com/albertolicea00/EmojiCraft" target="_blank" rel="noopener">⭐ Star on GitHub</a>
@@ -219,6 +223,12 @@
       <span id="toastText"></span>
     </div>
 
+    <!--
+      Soul Eater clipart — thanks to clipartmax.com ♥
+        Moon:   https://www.clipartmax.com/middle/m2i8G6G6m2m2i8Z5_drawn-lunar-yellow-soul-eater-moon-png/
+        Sun:    https://www.clipartmax.com/middle/m2i8H7G6i8d3A0G6_moon-clipart-soul-eater-soul-eater-sun-png/
+        both:   https://www.clipartmax.com/middle/m2H7i8K9d3b1d3d3_soul-eater-pixel-soul-eater-moon/
+    -->
     <script src="js/sources.js"></script>
     <script src="js/export.js"></script>
     <script src="js/app.js"></script>

@@ -272,7 +272,7 @@ function toggleZipMode(mode) {
 function toggleTheme() {
   state.dark = !state.dark;
   document.documentElement.setAttribute('data-theme', state.dark ? 'dark' : 'light');
-  document.getElementById('themeBtn').textContent = state.dark ? '☀️' : '🌙';
+  // icon swap handled by CSS data-theme selector
 }
 
 // ── Events ─────────────────────────────────────────────────────
