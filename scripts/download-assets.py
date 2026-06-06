@@ -30,6 +30,21 @@ VERSIONS = {
 
 ALL_STYLES = ["twemoji", "noto", "openmoji", "joypixels"]
 
+# COLR/CPAL emoji fonts — one file per style, replaces per-emoji SVG requests in grid.
+# Browser support: Chrome 98+, Firefox 107+, Safari 16.4+  (~97% of users as of 2026)
+FONTS = {
+    "TwemojiMozilla.woff2": (
+        "https://cdn.jsdelivr.net/npm/twemoji-colr-font@0.7.0/fonts/TwemojiMozilla.woff2"
+    ),
+    "NotoColorEmoji.woff2": (
+        "https://cdn.jsdelivr.net/npm/@fontsource/noto-color-emoji/files/"
+        "noto-color-emoji-all-400-normal.woff2"
+    ),
+    "OpenMoji.woff2": (
+        "https://cdn.jsdelivr.net/npm/openmoji@15.0.0/font/OpenMoji-color-glyf_colr_1.woff2"
+    ),
+}
+
 
 # ── URL builders ────────────────────────────────────────────────
 
@@ -92,6 +107,8 @@ def main():
     parser.add_argument("--styles", nargs="+", choices=ALL_STYLES + ["all"],
                         default=["all"],
                         help="Styles to download (default: all)")
+    parser.add_argument("--no-fonts", action="store_true",
+                        help="Skip font file downloads")
     args = parser.parse_args()
 
     styles = ALL_STYLES if "all" in args.styles else args.styles
@@ -99,6 +116,19 @@ def main():
     # Create output dirs
     for style in styles:
         (ASSETS / style).mkdir(parents=True, exist_ok=True)
+
+    # ── Fonts ──
+    if not args.no_fonts:
+        fonts_dir = ROOT / "assets" / "fonts"
+        fonts_dir.mkdir(parents=True, exist_ok=True)
+        print(f"→ Downloading {len(FONTS)} font file(s) to assets/fonts/")
+        for filename, url in FONTS.items():
+            dest = fonts_dir / filename
+            print(f"  {filename} ... ", end="", flush=True)
+            r = download_one(url, dest, args.force)
+            size_kb = dest.stat().st_size // 1024 if dest.exists() else 0
+            print(f"✓ {size_kb}KB" if r in ("ok", "skip") else "✗ failed (check URL)")
+        print()
 
     # ── 1. emoji.json ──
     json_url  = f"https://cdn.jsdelivr.net/npm/emoji-datasource@{VERSIONS['datasource']}/emoji.json"

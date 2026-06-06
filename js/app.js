@@ -19,11 +19,33 @@ const state = {
 
 let searchTimer = null;
 let toastTimer  = null;
+const _fontsLoaded = new Set();
+
+function ensureFont(src) {
+  if (!src.font || _fontsLoaded.has(src.font.family)) return;
+  _fontsLoaded.add(src.font.family);
+  const { family, googleFonts, cdn, local } = src.font;
+  if (LOCAL_ASSETS && local) {
+    const s = document.createElement('style');
+    s.textContent = `@font-face{font-family:'${family}';src:url('${local}')format('woff2');font-display:swap}`;
+    document.head.appendChild(s);
+  } else if (googleFonts) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = googleFonts;
+    document.head.appendChild(link);
+  } else {
+    const s = document.createElement('style');
+    s.textContent = `@font-face{font-family:'${family}';src:url('${cdn}')format('woff2');font-display:swap}`;
+    document.head.appendChild(s);
+  }
+}
 
 // ── Boot ───────────────────────────────────────────────────────
 
 async function init() {
   renderStyleBtns();
+  ensureFont(SOURCES[state.style]);
   renderSkeleton();
   bindEvents();
 
@@ -96,15 +118,17 @@ function renderGrid(emojis) {
   const src = SOURCES[state.style];
 
   grid.innerHTML = emojis.map(e => {
-    const url = src.isSystem ? null : src.url(e.unified);
     const ch  = toChar(e);
     const sel = state.selected?.unified === e.unified ? ' sel' : '';
-    return `<div class="emoji-cell${sel}" data-u="${e.unified}" title=":${e.short_name}:">
-      ${url
-        ? `<img src="${url}" alt="${ch}" loading="lazy" decoding="async" crossorigin="anonymous"
-            onerror="this.outerHTML='<span>${ch}</span>'">`
-        : `<span>${ch}</span>`
-      }</div>`;
+    let inner;
+    if (src.font) {
+      inner = `<span style="font-family:'${src.font.family}',serif;pointer-events:none">${ch}</span>`;
+    } else {
+      // No font available (JoyPixels, System) → system emoji, zero network requests.
+      // Styled SVG loads in the preview panel on click.
+      inner = `<span>${ch}</span>`;
+    }
+    return `<div class="emoji-cell${sel}" data-u="${e.unified}" title=":${e.short_name}:">${inner}</div>`;
   }).join('');
 }
 
@@ -148,6 +172,7 @@ function syncDlLabel() {
 function setStyle(key) {
   state.style = key;
   renderStyleBtns();
+  ensureFont(SOURCES[key]);
   renderGrid(state.filtered);
   if (state.selected) updatePreview();
 }
