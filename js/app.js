@@ -42,13 +42,29 @@ function ensureFont(src) {
   }
 }
 
+// ── URL hash ──────────────────────────────────────────────────
+
+function readHash() {
+  const key = window.location.hash.slice(1).toLowerCase();
+  if (key && SOURCES[key]) state.style = key;
+}
+
+function writeHash() {
+  history.replaceState(null, '', `#${state.style}`);
+}
+
 // ── Boot ───────────────────────────────────────────────────────
 
 async function init() {
+  readHash();
   renderStyleBtns();
   ensureFont(SOURCES[state.style]);
   renderSkeleton();
   bindEvents();
+  window.addEventListener('hashchange', () => {
+    readHash();
+    setStyle(state.style);
+  });
 
   try {
     const res  = await fetch(EMOJI_DATA_URL);
@@ -203,6 +219,7 @@ function updateFooterSource() {
 
 function setStyle(key) {
   state.style = key;
+  writeHash();
   renderStyleBtns();
   ensureFont(SOURCES[key]);
   renderGrid(state.filtered);
