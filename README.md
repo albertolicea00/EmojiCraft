@@ -48,13 +48,15 @@ or `npx serve .` or `make serve`.
 
 Instead of loading thousands of individual SVG files, EmojiCraft uses **COLR/CPAL color emoji fonts** for the grid. Each style loads a single font file once (cached by the browser). Only the selected emoji's full-quality SVG is fetched on click.
 
-| Style | Font | Size | Source |
-|-------|------|------|--------|
-| Twitter | Twemoji Mozilla (COLR v0) | ~2 MB | npm `twemoji-colr-font` |
-| Google | Noto Color Emoji | ~10 MB | Google Fonts |
-| OpenMoji | OpenMoji (COLR v1) | ~5 MB | npm `openmoji` |
-| JoyPixels | — no free font — | per SVG | SVG lazy-load |
-| System | OS native | 0 MB | no network request |
+| Style | Grid rendering | Source |
+|-------|---------------|--------|
+| System | OS native emoji | zero requests |
+| X (Twitter) | PNG lazy-load | `emoji-datasource-twitter` |
+| Google | Noto Color Emoji font | Google Fonts (1 CSS request) |
+| Apple | PNG lazy-load | `emoji-datasource-apple` |
+| Meta (Facebook) | PNG lazy-load | `emoji-datasource-facebook` |
+| OpenMoji | OS native (SVG on preview) | OpenMoji CDN |
+| JoyPixels | OS native (SVG on preview) | JoyPixels CDN |
 
 ### Browser compatibility
 
