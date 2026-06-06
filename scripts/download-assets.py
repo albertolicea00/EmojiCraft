@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 """
-Download emoji assets from CDN to assets/ for self-hosting.
+Download emoji SVG assets + Noto font for self-hosting.
 
-SVG styles  (saved to assets/emoji/{style}/):
-  noto        Noto SVGs from Google Fonts CDN
-  openmoji    OpenMoji SVGs
+SVG styles saved to assets/emoji/{style}/:
+  noto        Google Noto emoji SVGs
+  openmoji    OpenMoji color SVGs
   joypixels   JoyPixels SVGs
 
-PNG styles  (saved to assets/emoji/{style}/):
-  twitter     Twemoji PNGs via emoji-datasource-twitter
-  apple       Apple emoji PNGs via emoji-datasource-apple
-  facebook    Meta emoji PNGs via emoji-datasource-facebook
+Font saved to assets/fonts/:
+  NotoColorEmoji.woff2   Used by the Google style for zero-request grid rendering
 
-Fonts  (saved to assets/fonts/):
-  NotoColorEmoji.woff2   Noto COLR font for grid rendering
+PNG styles (twitter, apple, facebook) always load from CDN — not stored locally.
 
 Usage:
   python3 scripts/download-assets.py
-  python3 scripts/download-assets.py --force
-  python3 scripts/download-assets.py --styles twitter apple
+  python3 scripts/download-assets.py --styles noto openmoji
   python3 scripts/download-assets.py --no-fonts
+  python3 scripts/download-assets.py --force
   python3 scripts/download-assets.py --jobs 16
   JOBS=16 python3 scripts/download-assets.py
 """
@@ -41,9 +38,9 @@ VERSIONS = {
     "joypixels":  "8.0.0",
 }
 
-SVG_STYLES = ["noto", "openmoji", "joypixels"]
-PNG_STYLES = ["twitter", "apple", "facebook"]
-ALL_STYLES = SVG_STYLES + PNG_STYLES
+# Only SVG styles are downloaded locally.
+# PNG styles (twitter, apple, facebook) always load from CDN — no local storage.
+ALL_STYLES = ["noto", "openmoji", "joypixels"]
 
 # Only the Noto font is needed (Google/Noto source uses it for zero-request grid).
 # Twitter/Apple/Facebook use PNG lazy-loading so no font file is needed for them.
@@ -86,29 +83,6 @@ def svg_urls_for_emoji(e, styles):
         )
 
 
-def png_urls_for_emoji(e, styles):
-    """Yield (url, dest) PNG pairs from emoji-datasource-* packages."""
-    cp   = e["unified"].lower()
-    ds   = VERSIONS["datasource"]
-
-    if "twitter" in styles:
-        yield (
-            f"{DS_BASE}-twitter@{ds}/img/twitter/64/{cp}.png",
-            ASSETS / "twitter" / f"{cp}.png",
-        )
-
-    if "apple" in styles:
-        yield (
-            f"{DS_BASE}-apple@{ds}/img/apple/64/{cp}.png",
-            ASSETS / "apple" / f"{cp}.png",
-        )
-
-    if "facebook" in styles:
-        yield (
-            f"{DS_BASE}-facebook@{ds}/img/facebook/64/{cp}.png",
-            ASSETS / "facebook" / f"{cp}.png",
-        )
-
 
 # ── Download helper ─────────────────────────────────────────────
 
@@ -139,9 +113,7 @@ def main():
                         help="Skip font file downloads")
     args = parser.parse_args()
 
-    styles     = ALL_STYLES if "all" in args.styles else args.styles
-    svg_styles = [s for s in styles if s in SVG_STYLES]
-    png_styles = [s for s in styles if s in PNG_STYLES]
+    styles = ALL_STYLES if "all" in args.styles else args.styles
 
     # Create output dirs
     for style in styles:
@@ -171,16 +143,9 @@ def main():
 
     emojis = json.loads(json_dest.read_text())
 
-    # ── Build task list ──
-    tasks = []
-    if svg_styles:
-        tasks += [(u, d) for e in emojis for u, d in svg_urls_for_emoji(e, svg_styles)]
-    if png_styles:
-        tasks += [(u, d) for e in emojis for u, d in png_urls_for_emoji(e, png_styles)]
-
-    svg_count = sum(1 for s in styles if s in SVG_STYLES)
-    png_count = sum(1 for s in styles if s in PNG_STYLES)
-    print(f"→ {len(emojis)} emojis  ×  {svg_count} SVG style(s) + {png_count} PNG style(s)  =  {len(tasks)} files  [workers: {args.jobs}]")
+    # ── Build task list (SVG only) ──
+    tasks = [(u, d) for e in emojis for u, d in svg_urls_for_emoji(e, styles)]
+    print(f"→ {len(emojis)} emojis × {len(styles)} style(s) = {len(tasks)} SVGs  [workers: {args.jobs}]")
 
     if not tasks:
         print("Nothing to download.")

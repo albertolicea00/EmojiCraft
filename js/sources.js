@@ -27,9 +27,7 @@ const SOURCES = {
     label:   'X (Twitter)',
     powered: { text: 'Twemoji', url: 'https://github.com/jdecked/twemoji' },
     isPng:   true,
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/twitter/${cp.toLowerCase()}.png`
-      : `${DS}-twitter@14.0.0/img/twitter/64/${cp.toLowerCase()}.png`,
+    url:     cp => `${DS}-twitter@14.0.0/img/twitter/64/${cp.toLowerCase()}.png`,
   },
 
   google: {
@@ -52,18 +50,14 @@ const SOURCES = {
     label:   'Apple',
     powered: { text: 'Apple Color Emoji', url: 'https://emojipedia.org/apple' },
     isPng:   true,
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/apple/${cp.toLowerCase()}.png`
-      : `${DS}-apple@14.0.0/img/apple/64/${cp.toLowerCase()}.png`,
+    url:     cp => `${DS}-apple@14.0.0/img/apple/64/${cp.toLowerCase()}.png`,
   },
 
   facebook: {
     label:   'Meta',
     powered: { text: 'Meta (Facebook) emoji', url: 'https://emojipedia.org/facebook' },
     isPng:   true,
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/facebook/${cp.toLowerCase()}.png`
-      : `${DS}-facebook@14.0.0/img/facebook/64/${cp.toLowerCase()}.png`,
+    url:     cp => `${DS}-facebook@14.0.0/img/facebook/64/${cp.toLowerCase()}.png`,
   },
 
   openmoji: {

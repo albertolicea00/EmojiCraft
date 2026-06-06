@@ -735,16 +735,45 @@ input {
 ═══════════════════════════════════════ */
 
 @media (max-width: 780px) {
+  /* Nav: horizontal scroll so all styles are reachable */
+  .style-nav {
+    justify-content: flex-start;
+  }
+  .style-nav-inner {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .style-nav-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Controls on top, grid below */
   .app {
-    flex-direction: column-reverse;
-    gap: 24px;
-    padding: 20px 16px 80px;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 12px;
     align-items: stretch;
+    overflow-y: auto;
   }
 
   .preview-section {
     width: 100%;
     align-items: center;
+    gap: 12px;
+  }
+
+  /* Smaller preview on mobile */
+  .emoji-display {
+    width: 100px;
+    height: 100px;
+  }
+  .emoji-display .emoji-char {
+    font-size: 72px;
+  }
+  .emoji-placeholder {
+    display: none;
   }
 
   .picker-section {
@@ -753,29 +782,11 @@ input {
 
   .picker-card {
     width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-  }
-
-  .emoji-display {
-    width: 160px;
-    height: 160px;
-  }
-
-  .emoji-display .emoji-char {
-    font-size: 110px;
-  }
-
-  .theme-btn {
-    top: 12px;
-    right: 12px;
+    max-width: 100%;
   }
 }
 
 @media (max-width: 400px) {
-  .style-selector {
-    gap: 12px;
-  }
   .seg-group {
     flex-wrap: wrap;
     border-radius: 12px;
