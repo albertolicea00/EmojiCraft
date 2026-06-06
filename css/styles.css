@@ -118,33 +118,29 @@ input {
   justify-content: center;
 }
 
-/* ── Theme toggle button ── */
+/* ── Theme toggle — bare image, peeks from under the nav ── */
 .theme-btn {
-  flex-shrink: 0;
-  width: 56px;
-  height: 100%;
-  border: none;
-  border-left: 1px solid var(--border);
+  position: fixed;
+  top: 2rem;
+  right: -.5rem;
+  z-index: 9999;
   background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-.theme-btn:hover {
-  background: var(--surface2);
+  width: 100px;
+  height: 100px;
 }
 .theme-btn .btn-moon,
 .theme-btn .btn-sun {
-  height: 32px;
-  width: auto;
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100px;
+  width: auto;
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
-  transform: scale(0.8);
+  transform: scale(0.9);
   pointer-events: none;
 }
 [data-theme="light"] .theme-btn .btn-moon {
