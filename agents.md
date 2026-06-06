@@ -33,7 +33,6 @@ scripts/
 | apple | Apple | PNG lazy (emoji-datasource-apple) | PNG canvas |
 | facebook | Meta | PNG lazy (emoji-datasource-facebook) | PNG canvas |
 | openmoji | OpenMoji | OS native emoji (SVG on preview/export) | SVG CDN |
-| joypixels | JoyPixels | OS native emoji (SVG on preview/export) | SVG CDN |
 
 `LOCAL_ASSETS = true` in `sources.js` → switches all URLs to local `assets/` paths.
 

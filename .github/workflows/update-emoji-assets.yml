@@ -42,7 +42,6 @@ jobs:
             **SVG styles**
             - `assets/emoji/noto/` — Noto SVGs (Google)
             - `assets/emoji/openmoji/` — OpenMoji SVGs
-            - `assets/emoji/joypixels/` — JoyPixels SVGs
 
             **PNG styles** (64 px, from `emoji-datasource-*`)
             - `assets/emoji/twitter/` — Twemoji / X (Twitter)

@@ -10,7 +10,7 @@
 
 |                       |                                                |
 | --------------------- | ---------------------------------------------- |
-| 🎭 **5 styles**       | Twitter, Google, OpenMoji, JoyPixels, System   |
+| 🎭 **5 styles**       | Twitter, Google, OpenMoji, Apple, System       |
 | 🔍 **Instant search** | Filter by name or keyword, sidebar by category |
 | 🖼️ **Big preview**    | Click any emoji to see it full size            |
 | 📦 **Export**         | SVG · PNG · WebP — 64 to 1024px + custom       |
@@ -56,7 +56,6 @@ Instead of loading thousands of individual SVG files, EmojiCraft uses **COLR/CPA
 | Apple | PNG lazy-load | `emoji-datasource-apple` |
 | Meta (Facebook) | PNG lazy-load | `emoji-datasource-facebook` |
 | OpenMoji | OS native (SVG on preview) | OpenMoji CDN |
-| JoyPixels | OS native (SVG on preview) | JoyPixels CDN |
 
 ### Browser compatibility
 

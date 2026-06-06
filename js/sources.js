@@ -67,14 +67,6 @@ const SOURCES = {
       ? `assets/emoji/openmoji/${cp.toUpperCase()}.svg`
       : `https://cdn.jsdelivr.net/npm/openmoji@15.0.0/color/svg/${cp.toUpperCase()}.svg`,
   },
-
-  joypixels: {
-    label:   'JoyPixels',
-    powered: { text: 'JoyPixels', url: 'https://joypixels.com' },
-    url: cp => LOCAL_ASSETS
-      ? `assets/emoji/joypixels/${cp.toLowerCase()}.svg`
-      : `https://cdn.jsdelivr.net/npm/emoji-toolkit@8.0.0/extras/svgs/${cp.toLowerCase()}.svg`,
-  },
 };
 
 const CAT_ICONS = {

@@ -5,7 +5,6 @@ Download emoji SVG assets + Noto font for self-hosting.
 SVG styles saved to assets/emoji/{style}/:
   noto        Google Noto emoji SVGs
   openmoji    OpenMoji color SVGs
-  joypixels   JoyPixels SVGs
 
 Font saved to assets/fonts/:
   NotoColorEmoji.woff2   Used by the Google style for zero-request grid rendering
@@ -35,12 +34,11 @@ ASSETS = ROOT / "assets" / "emoji"
 VERSIONS = {
     "datasource": "14.0.0",
     "openmoji":   "15.0.0",
-    "joypixels":  "8.0.0",
 }
 
 # Only SVG styles are downloaded locally.
 # PNG styles (twitter, apple, facebook) always load from CDN — no local storage.
-ALL_STYLES = ["noto", "openmoji", "joypixels"]
+ALL_STYLES = ["noto", "openmoji"]
 
 # Only the Noto font is needed (Google/Noto source uses it for zero-request grid).
 # Twitter/Apple/Facebook use PNG lazy-loading so no font file is needed for them.
@@ -73,13 +71,6 @@ def svg_urls_for_emoji(e, styles):
         yield (
             f"https://cdn.jsdelivr.net/npm/openmoji@{VERSIONS['openmoji']}/color/svg/{name}.svg",
             ASSETS / "openmoji" / f"{name}.svg",
-        )
-
-    if "joypixels" in styles:
-        name = cp.lower()
-        yield (
-            f"https://cdn.jsdelivr.net/npm/emoji-toolkit@{VERSIONS['joypixels']}/extras/svgs/{name}.svg",
-            ASSETS / "joypixels" / f"{name}.svg",
         )
 
 
