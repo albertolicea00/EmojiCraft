@@ -38,6 +38,22 @@ scripts/
 
 ---
 
+## Checklist: adding or changing a source
+
+When adding, renaming, or removing an emoji style, update ALL of these:
+
+| File | What to change |
+|------|---------------|
+| `js/sources.js` | Add/remove entry in `SOURCES` |
+| `scripts/download-assets.py` | `ALL_STYLES` list + `svg_urls_for_emoji()` (SVG sources only) |
+| `README.md` | Table in "Emoji fonts — performance" section |
+| `agents.md` | `SOURCES` table in "Project Shape" section |
+
+PNG sources (twitter, apple, facebook) → CDN-only, no download script changes needed.
+SVG sources (noto, openmoji) → add to `ALL_STYLES` and `svg_urls_for_emoji()`.
+
+---
+
 ## Adding a new emoji style
 
 Edit `js/sources.js` → add entry to `SOURCES`:

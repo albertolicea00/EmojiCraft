@@ -99,7 +99,7 @@ def main():
                         help="Re-download files that already exist")
     parser.add_argument("--styles", nargs="+", choices=ALL_STYLES + ["all"],
                         default=["all"],
-                        help=f"Styles to download. SVG: {SVG_STYLES}  PNG: {PNG_STYLES}")
+                        help=f"Styles to download: {ALL_STYLES}")
     parser.add_argument("--no-fonts", action="store_true",
                         help="Skip font file downloads")
     args = parser.parse_args()
