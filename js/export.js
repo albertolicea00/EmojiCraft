@@ -133,6 +133,30 @@ async function exportIco(emoji, size) {
 }
 
 /**
+ * Export SVG + PNG + WebP at the given size into a ZIP Blob.
+ */
+async function exportZipFormats(emoji, size) {
+  const zip = new JSZip();
+  const n   = emoji.short_name;
+
+  for (const fmt of ['png', 'webp']) {
+    const c   = await toCanvas(emoji, size);
+    const buf = await (await canvasBlob(c, fmt)).arrayBuffer();
+    zip.file(`${n}_${size}px.${fmt}`, buf);
+  }
+
+  if (!SOURCES[state.style].isSystem) {
+    try { zip.file(`${n}.svg`, await fetchSvg(emoji)); } catch (_) {}
+  }
+
+  return zip.generateAsync({
+    type: 'blob',
+    compression: 'DEFLATE',
+    compressionOptions: { level: 6 },
+  });
+}
+
+/**
  * Trigger a browser file download.
  */
 function triggerDownload(blob, filename) {

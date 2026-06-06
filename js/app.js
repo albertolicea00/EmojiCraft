@@ -13,7 +13,7 @@ const state = {
   style:    'system',
   fmt:      'svg',
   size:     128,
-  zip:      false,
+  zipMode:  null,   // null | 'sizes' | 'formats'
   dark:     false,
 };
 
@@ -147,7 +147,7 @@ function updatePreview() {
     : `<span class="emoji-char">${ch}</span>`;
 
   // Update download button label
-  const ext  = state.zip ? 'zip' : state.fmt;
+  const ext  = state.zipMode ? 'zip' : state.fmt;
   document.getElementById('dlBtnLabel').textContent =
     `Download ${e.short_name}.${ext}`;
 
@@ -156,13 +156,16 @@ function updatePreview() {
 }
 
 function syncSizeRow() {
-  const row = document.getElementById('sizeRow');
-  row.style.display = (state.fmt === 'svg' && !state.zip) ? 'none' : '';
+  document.getElementById('sizeRow').style.display =
+    (state.fmt === 'svg' || state.zipMode) ? 'none' : '';
+  // All sizes zip not applicable to SVG (vector = scalable)
+  const zipSizes = document.getElementById('zipSizesRow');
+  if (zipSizes) zipSizes.style.display = state.fmt === 'svg' ? 'none' : '';
 }
 
 function syncDlLabel() {
   if (!state.selected) return;
-  const ext = state.zip ? 'zip' : state.fmt;
+  const ext = state.zipMode ? 'zip' : state.fmt;
   document.getElementById('dlBtnLabel').textContent =
     `Download ${state.selected.short_name}.${ext}`;
 }
@@ -208,9 +211,12 @@ async function handleDownload() {
 
   try {
     const e = state.selected;
-    if (state.zip) {
+    if (state.zipMode === 'sizes') {
       triggerDownload(await exportZip(e), `${e.short_name}_all_sizes.zip`);
-      toast('ZIP downloaded!', '✅');
+      toast('ZIP downloaded! (all sizes)', '✅');
+    } else if (state.zipMode === 'formats') {
+      triggerDownload(await exportZipFormats(e, state.size), `${e.short_name}_all_formats.zip`);
+      toast('ZIP downloaded! (all formats)', '✅');
     } else if (state.fmt === 'svg') {
       triggerDownload(await exportSvg(e), `${e.short_name}.svg`);
       toast('SVG downloaded!', '✅');
@@ -219,7 +225,7 @@ async function handleDownload() {
         await exportIco(e, state.size),
         `${e.short_name}_${state.size}px.ico`
       );
-      toast(`ICO ${state.size}px downloaded!`, '✅');
+      toast(`ico ${state.size}px downloaded!`, '✅');
     } else {
       triggerDownload(
         await exportRaster(e, state.fmt, state.size),
@@ -235,44 +241,11 @@ async function handleDownload() {
   }
 }
 
-async function handleCopy() {
-  if (!state.selected) return;
-  const e = state.selected;
-  try {
-    if (state.fmt === 'ico') {
-      await navigator.clipboard.writeText(toChar(e));
-      toast('Character copied!', '✅');
-      return;
-    }
-    if (state.fmt === 'svg' && !SOURCES[state.style].isSystem) {
-      await navigator.clipboard.writeText(await fetchSvg(e));
-      toast('SVG code copied!', '✅');
-    } else if (state.fmt !== 'svg') {
-      const blob = await exportRaster(e, state.fmt === 'webp' ? 'png' : state.fmt, state.size);
-      try {
-        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-        toast('Image copied!', '✅');
-      } catch (_) {
-        await navigator.clipboard.writeText(toChar(e));
-        toast('Emoji character copied!', '✅');
-      }
-    } else {
-      await navigator.clipboard.writeText(toChar(e));
-      toast('Character copied!', '✅');
-    }
-  } catch (_) {
-    try {
-      await navigator.clipboard.writeText(toChar(e));
-      toast('Character copied!', '✅');
-    } catch (err) {
-      toast('Copy not supported', '⚠️');
-    }
-  }
-}
 
-function toggleZip() {
-  state.zip = !state.zip;
-  document.getElementById('zipTog').classList.toggle('on', state.zip);
+function toggleZipMode(mode) {
+  state.zipMode = state.zipMode === mode ? null : mode;
+  document.getElementById('zipSizesTog').classList.toggle('on', state.zipMode === 'sizes');
+  document.getElementById('zipFmtsTog').classList.toggle('on', state.zipMode === 'formats');
   syncSizeRow();
   syncDlLabel();
 }

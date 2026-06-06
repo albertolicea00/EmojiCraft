@@ -90,7 +90,7 @@
               <button class="seg seg-active" data-fmt="svg">SVG</button>
               <button class="seg" data-fmt="png">PNG</button>
               <button class="seg" data-fmt="webp">WebP</button>
-              <button class="seg" data-fmt="ico">ICO</button>
+              <button class="seg" data-fmt="ico">ico</button>
             </div>
           </div>
 
@@ -115,17 +115,26 @@
             />
           </div>
 
-          <!-- ZIP toggle -->
-          <div class="zip-row">
-            <label class="zip-label">
-              <div class="toggle" id="zipTog" onclick="toggleZip()">
+          <!-- ZIP options -->
+          <div class="zip-options">
+            <label class="zip-label" id="zipSizesRow">
+              <div class="toggle" id="zipSizesTog" onclick="toggleZipMode('sizes')">
                 <div class="toggle-knob"></div>
               </div>
-              <span>All sizes as ZIP</span>
+              <div class="zip-label-text">
+                <span>All sizes</span>
+                <small>64 · 128 · 256 · 512 · 1024 px</small>
+              </div>
             </label>
-            <button class="copy-btn" id="copyBtn" onclick="handleCopy()">
-              Copy
-            </button>
+            <label class="zip-label">
+              <div class="toggle" id="zipFmtsTog" onclick="toggleZipMode('formats')">
+                <div class="toggle-knob"></div>
+              </div>
+              <div class="zip-label-text">
+                <span>All formats</span>
+                <small>SVG · PNG · WebP</small>
+              </div>
+            </label>
           </div>
 
           <!-- Hint -->
