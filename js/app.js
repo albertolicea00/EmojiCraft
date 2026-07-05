@@ -146,21 +146,36 @@ function renderGrid(emojis) {
     return;
   }
 
+  const src = SOURCES[state.style];
+
+  // Filter out emojis that are not supported by the current style
+  const validEmojis = emojis.filter(e => {
+    if (state.style === 'twemoji' && e.has_img_twitter === false) return false;
+    if (state.style === 'apple' && e.has_img_apple === false) return false;
+    if (state.style === 'google' && e.has_img_google === false) return false;
+    if (state.style === 'facebook' && e.has_img_facebook === false) return false;
+    return true;
+  });
+
+  if (!validEmojis.length) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+
   empty.classList.add('hidden');
   const tab = CAT_TABS.find(t => t.id === state.category);
   head.textContent  = tab ? tab.label : 'All';
-  count.textContent = emojis.length.toLocaleString();
+  count.textContent = validEmojis.length.toLocaleString();
 
-  const src = SOURCES[state.style];
-
-  grid.innerHTML = emojis.map(e => {
+  grid.innerHTML = validEmojis.map(e => {
     const unified = getTonedUnified(e);
     const ch      = toChar({ unified });
     const sel     = state.selected?.unified === e.unified ? ' sel' : '';
     let inner;
     if (src.font) {
       inner = `<span style="font-family:'${src.font.family}',serif;pointer-events:none">${ch}</span>`;
-    } else if (src.isPng) {
+    } else if (!src.isSystem) {
       const url = src.url(unified);
       inner = `<img src="${url}" alt="${ch}" loading="lazy" decoding="async" crossorigin="anonymous"
           onerror="this.outerHTML='<span>${ch}</span>'">`;
