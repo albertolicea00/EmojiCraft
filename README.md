@@ -10,7 +10,7 @@
 
 |                       |                                                |
 | --------------------- | ---------------------------------------------- |
-| 🎭 **5 styles**       | Twitter, Google, OpenMoji, Apple, System       |
+| 🎭 **6 styles**       | Twitter, Google, OpenMoji, Apple, Twemoji, System       |
 | 🔍 **Instant search** | Filter by name or keyword, sidebar by category |
 | 🖼️ **Big preview**    | Click any emoji to see it full size            |
 | 📦 **Export**         | SVG · PNG · WebP — 64 to 1024px + custom       |
@@ -56,6 +56,7 @@ Instead of loading thousands of individual SVG files, EmojiCraft uses **COLR/CPA
 | Apple | PNG lazy-load | `emoji-datasource-apple` |
 | Meta (Facebook) | PNG lazy-load | `emoji-datasource-facebook` |
 | OpenMoji | OS native (SVG on preview) | OpenMoji CDN |
+| Twemoji  | OS native (SVG on preview) | jsDelivr gh / local assets |
 
 ### Browser compatibility
 
@@ -82,7 +83,7 @@ make download-assets
 bash scripts/download-assets.sh
 ```
 
-Downloads **3 font files** → `assets/fonts/` + ~1 800 emojis × 4 styles → `assets/emoji/`. Then flip the flag in `js/sources.js`:
+Downloads **3 font files** → `assets/fonts/` + ~1 800 emojis × 5 styles → `assets/emoji/`. Then flip the flag in `js/sources.js`:
 
 ```js
 const LOCAL_ASSETS = true;   // was false
@@ -91,7 +92,7 @@ const LOCAL_ASSETS = true;   // was false
 Options:
 
 ```bash
-make download-assets ARGS="--styles twemoji noto"   # specific styles only
+make download-assets ARGS="--styles noto twemoji"   # specific styles only
 make download-assets ARGS="--no-fonts"               # skip font files, SVGs only
 make download-assets ARGS="--force"                  # re-download existing files
 make download-assets ARGS="--jobs 16"                # more parallelism (default: 8)

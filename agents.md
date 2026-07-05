@@ -33,6 +33,7 @@ scripts/
 | apple | Apple | PNG lazy (emoji-datasource-apple) | PNG canvas |
 | facebook | Meta | PNG lazy (emoji-datasource-facebook) | PNG canvas |
 | openmoji | OpenMoji | OS native emoji (SVG on preview/export) | SVG CDN |
+| twemoji | Twemoji | OS native emoji (SVG on preview/export) | SVG CDN |
 
 `LOCAL_ASSETS = true` in `sources.js` → switches all URLs to local `assets/` paths.
 
@@ -50,7 +51,7 @@ When adding, renaming, or removing an emoji style, update ALL of these:
 | `agents.md` | `SOURCES` table in "Project Shape" section |
 
 PNG sources (twitter, apple, facebook) → CDN-only, no download script changes needed.
-SVG sources (noto, openmoji) → add to `ALL_STYLES` and `svg_urls_for_emoji()`.
+SVG sources (noto, openmoji, twemoji) → add to `ALL_STYLES` and `svg_urls_for_emoji()`.
 
 ---
 
@@ -82,7 +83,7 @@ If adding a PNG style, also add it to `PNG_STYLES` in `scripts/download-assets.p
 
 ```bash
 make download-assets              # all styles + NotoColorEmoji font
-make download-assets ARGS="--styles apple twitter --no-fonts"
+make download-assets ARGS="--styles noto twemoji --no-fonts"
 make download-assets ARGS="--force"
 ```
 

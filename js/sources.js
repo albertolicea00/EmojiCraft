@@ -23,11 +23,13 @@ const SOURCES = {
     isSystem: true,
   },
 
-  twitter: {
+  twemoji: {
     label:   'X (Twitter)',
     powered: { text: 'Twemoji', url: 'https://github.com/jdecked/twemoji' },
-    isPng:   true,
-    url:     cp => `${DS}-twitter@14.0.0/img/twitter/64/${cp.toLowerCase()}.png`,
+    // url:     cp => `${DS}-twitter@14.0.0/img/twitter/64/${cp.toLowerCase()}.png`,
+    url: cp => LOCAL_ASSETS
+      ? `assets/emoji/twemoji/${cp.toLowerCase()}.svg`
+      : `https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/${cp.toLowerCase()}.svg`,
   },
 
   google: {
