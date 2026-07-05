@@ -56,7 +56,7 @@ const SOURCES = {
   },
 
   facebook: {
-    label:   'Meta',
+    label:   'Meta (Facebook)',
     powered: { text: 'Meta (Facebook) emoji', url: 'https://emojipedia.org/facebook' },
     isPng:   true,
     url:     cp => `${DS}-facebook@14.0.0/img/facebook/64/${cp.toLowerCase()}.png`,

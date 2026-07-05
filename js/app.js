@@ -178,7 +178,7 @@ function renderGrid(emojis) {
     } else if (!src.isSystem) {
       const url = src.url(unified);
       inner = `<img src="${url}" alt="${ch}" loading="lazy" decoding="async" crossorigin="anonymous"
-          onerror="this.outerHTML='<span>${ch}</span>'">`;
+          onerror="this.parentElement.style.display='none'">`;
     } else {
       inner = `<span>${ch}</span>`;
     }
