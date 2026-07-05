@@ -127,7 +127,7 @@ input {
   position: fixed;
   top: 2rem;
   top: 3rem;
-  right: -.5rem;
+  right: -3rem;
   z-index: 9999;
   background: none;
   border: none;
@@ -832,19 +832,37 @@ input {
     display: none;
   }
 
+  .theme-btn {
+    width: 60px;
+    height: 60px;
+    right: -1.5rem;
+  }
+  .theme-btn .btn-moon,
+  .theme-btn .btn-sun {
+    height: 60px;
+  }
+
   /* Controls on top, grid below */
   .app {
     flex-direction: column;
-    gap: 16px;
-    padding: 16px 12px;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px;
     align-items: stretch;
-    overflow-y: auto;
+    height: calc(100vh - 30px);
+    overflow: hidden;
   }
 
   .preview-section {
     width: 100%;
     align-items: center;
     gap: 12px;
+    max-height: 40vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    padding-right: 4px;
+    flex-shrink: 0;
   }
 
   /* Smaller preview on mobile */
@@ -861,11 +879,22 @@ input {
 
   .picker-section {
     flex-shrink: unset;
+    flex: 1;
+    min-height: 0;
   }
 
   .picker-card {
     width: 100%;
     max-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .emoji-grid {
+    flex: 1;
+    max-height: none;
+    overflow-y: auto;
   }
 }
 
@@ -873,5 +902,58 @@ input {
   .seg-group {
     flex-wrap: wrap;
     border-radius: 12px;
+  }
+}
+
+/* Mobile Landscape Adjustments */
+@media (max-width: 900px) and (orientation: landscape) {
+  .app {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 16px;
+    padding: 8px 12px;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+  }
+  .preview-section {
+    width: 240px;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
+    flex-shrink: 0;
+  }
+  .picker-section {
+    flex: 1;
+    height: 100%;
+    min-width: 0;
+  }
+  .picker-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .emoji-grid {
+    flex: 1;
+    max-height: 140px;
+    overflow-y: auto;
+  }
+  .emoji-display {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+  .emoji-display .emoji-char {
+    font-size: 54px;
+  }
+  .theme-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 32px;
+    height: 32px;
+  }
+  .theme-btn .btn-moon,
+  .theme-btn .btn-sun {
+    height: 32px;
   }
 }
