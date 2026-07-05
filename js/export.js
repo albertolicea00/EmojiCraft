@@ -37,7 +37,32 @@ async function toCanvas(emoji, size) {
     await new Promise((ok, fail) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.onload  = () => { ctx.drawImage(img, 0, 0, size, size); ok(); };
+      img.onload  = async () => {
+        if (src.isPng && state.upscaleMode && state.upscaleMode !== 'none') {
+          let upscaled;
+          if (state.upscaleMode === 'webgl') {
+            upscaled = upscaleWebGL(img, size, size);
+          } else if (state.upscaleMode === 'unsharp') {
+            upscaled = upscaleWebGLUnsharp(img, size, size);
+          } else if (state.upscaleMode === 'glfx') {
+            upscaled = upscaleWebGLFilterPro(img, size, size);
+          } else if (state.upscaleMode === 'wasm') {
+            upscaled = await upscaleWasm(img, size, size);
+          } else if (state.upscaleMode === 'waifu2x') {
+            upscaled = await upscaleWasmWaifu2x(img, size, size);
+          } else if (state.upscaleMode === 'esrgan') {
+            upscaled = await upscaleWasmEsrgan(img, size, size);
+          } else if (state.upscaleMode === 'opencv') {
+            upscaled = await upscaleWasmOpencv(img, size, size);
+          } else if (state.upscaleMode === 'canvas') {
+            upscaled = await upscaleCanvas(img, size, size);
+          }
+          ctx.drawImage(upscaled, 0, 0);
+        } else {
+          ctx.drawImage(img, 0, 0, size, size);
+        }
+        ok();
+      };
       img.onerror = fail;
       img.src = url;
     });

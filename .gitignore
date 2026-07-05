@@ -46,6 +46,7 @@ out/
 # Temp
 tmp/
 temp/
+scratch/
 
 # Emoji assets — only SVGs allowed, never PNGs
 # PNG styles (twitter/apple/facebook) always load from CDN, never stored locally

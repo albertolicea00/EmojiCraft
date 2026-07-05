@@ -15,6 +15,7 @@ const state = {
   fmt:      'svg',
   size:     128,
   zipMode:  null,   // null | 'sizes' | 'formats'
+  upscaleMode: 'canvas', // 'webgl' | 'wasm' | 'canvas' | 'none'
   dark:     false,
 };
 
@@ -180,10 +181,45 @@ function updatePreview() {
   const ch      = toChar({ unified });
   const wrap    = document.getElementById('emojiDisplay');
 
-  wrap.innerHTML = url
-    ? `<img src="${url}" alt="${ch}" crossorigin="anonymous"
-        onerror="this.outerHTML='<span class=emoji-char>${ch}</span>'">`
-    : `<span class="emoji-char">${ch}</span>`;
+  if (url) {
+    if (src.isPng && state.upscaleMode && state.upscaleMode !== 'none') {
+      wrap.innerHTML = `<canvas id="previewCanvas" width="220" height="220" style="width:72%;height:72%;object-fit:contain;animation:popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);filter:drop-shadow(0 12px 28px rgba(0,0,0,0.16));"></canvas>`;
+      const canvas = document.getElementById('previewCanvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = async () => {
+        let upscaled;
+        if (state.upscaleMode === 'webgl') {
+          upscaled = upscaleWebGL(img, 220, 220);
+        } else if (state.upscaleMode === 'unsharp') {
+          upscaled = upscaleWebGLUnsharp(img, 220, 220);
+        } else if (state.upscaleMode === 'glfx') {
+          upscaled = upscaleWebGLFilterPro(img, 220, 220);
+        } else if (state.upscaleMode === 'wasm') {
+          upscaled = await upscaleWasm(img, 220, 220);
+        } else if (state.upscaleMode === 'waifu2x') {
+          upscaled = await upscaleWasmWaifu2x(img, 220, 220);
+        } else if (state.upscaleMode === 'esrgan') {
+          upscaled = await upscaleWasmEsrgan(img, 220, 220);
+        } else if (state.upscaleMode === 'opencv') {
+          upscaled = await upscaleWasmOpencv(img, 220, 220);
+        } else if (state.upscaleMode === 'canvas') {
+          upscaled = await upscaleCanvas(img, 220, 220);
+        }
+        ctx.drawImage(upscaled, 0, 0);
+      };
+      img.onerror = () => {
+        wrap.innerHTML = `<span class="emoji-char">${ch}</span>`;
+      };
+      img.src = url;
+    } else {
+      wrap.innerHTML = `<img src="${url}" alt="${ch}" crossorigin="anonymous"
+          onerror="this.outerHTML='<span class=emoji-char>${ch}</span>'">`;
+    }
+  } else {
+    wrap.innerHTML = `<span class="emoji-char">${ch}</span>`;
+  }
 
   const ext = state.zipMode ? 'zip' : state.fmt;
   document.getElementById('dlBtnLabel').textContent =
@@ -205,6 +241,21 @@ function syncFmtSelector() {
         state.fmt = 'png';
         document.querySelectorAll('#fmtGroup .seg').forEach(b =>
           b.classList.toggle('seg-active', b.dataset.fmt === 'png'));
+      }
+    }
+  }
+
+  // Handle Upscale row visibility
+  const upscaleRow = document.getElementById('upscaleRow');
+  if (upscaleRow) {
+    const isPng = src && src.isPng;
+    upscaleRow.style.display = isPng ? '' : 'none';
+    if (isPng) {
+      const toggle = document.getElementById('upscaleToggle');
+      const group = document.getElementById('upscaleGroup');
+      if (toggle && group) {
+        toggle.classList.remove('hidden');
+        group.classList.add('hidden');
       }
     }
   }
@@ -388,6 +439,28 @@ function bindEvents() {
     syncSizeRow();
     syncDlLabel();
   });
+
+  // Upscaling buttons
+  document.getElementById('upscaleGroup').addEventListener('click', e => {
+    const btn = e.target.closest('.seg');
+    if (!btn || !btn.dataset.upscale) return;
+    state.upscaleMode = btn.dataset.upscale;
+    document.querySelectorAll('#upscaleGroup .seg').forEach(b =>
+      b.classList.toggle('seg-active', b === btn));
+    if (state.selected) updatePreview();
+  });
+
+  // Upscaling collapse/expand toggle
+  const upscaleTog = document.getElementById('upscaleToggle');
+  if (upscaleTog) {
+    upscaleTog.addEventListener('click', () => {
+      const group = document.getElementById('upscaleGroup');
+      if (group) {
+        upscaleTog.classList.add('hidden');
+        group.classList.remove('hidden');
+      }
+    });
+  }
 
   // Size buttons
   document.getElementById('szGroup').addEventListener('click', e => {

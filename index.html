@@ -53,8 +53,10 @@
 
     <!-- ── Theme toggle (floats below nav) ── -->
     <button id="themeBtn" class="theme-btn" title="Toggle dark mode">
-      <img class="btn-moon" src="assets/clipart497278.webp" alt="Switch to dark mode" />
-      <img class="btn-sun"  src="assets/clipart770858.webp" alt="Switch to light mode" />
+      <!-- <img class="btn-moon" src="assets/clipart497278.webp" alt="Switch to dark mode" /> -->
+      <!-- <img class="btn-sun"  src="assets/clipart770858.webp" alt="Switch to light mode" /> -->
+       <img class="btn-moon" src="assets/full_moon_with_face_512px.webp" alt="Switch to dark mode" />
+      <img class="btn-sun"  src="assets/new_moon_with_face_512px.webp" alt="Switch to light mode" />
     </button>
 
     <!-- ══════════════════════════════════════════════════════════
@@ -147,6 +149,24 @@
 
           <!-- Hint -->
           <p class="hint" id="hint">Choose a format and click Download</p>
+
+          <!-- Upscaling row (only shown for PNG styles) -->
+          <div class="upscale-row" id="upscaleRow" style="display: none;">
+            <div id="upscaleToggle" class="upscaleToggle">
+              Do you want to upscale the preview?
+            </div>
+            <div class="seg-group upscaleGroup hidden" id="upscaleGroup">
+              <button class="seg" data-upscale="none">None</button>
+              <button class="seg seg-active" data-upscale="canvas">Canvas</button>
+              <button class="seg" data-upscale="webgl">WebGL (Bicubic)</button>
+              <button class="seg" data-upscale="wasm">WASM</button>
+              <button class="seg" data-upscale="unsharp">WebGL + Unsharp Mask</button>
+              <button class="seg" data-upscale="glfx">WebGL + Filters</button>
+              <button class="seg" data-upscale="opencv">OpenCV.js</button>
+              <button class="seg" data-upscale="waifu2x">Waifu2x WASM</button>
+              <button class="seg" data-upscale="esrgan">Real-ESRGAN Lite</button>
+            </div>
+          </div>
         </div>
 
       </section>
@@ -234,6 +254,7 @@
         both:   https://www.clipartmax.com/middle/m2H7i8K9d3b1d3d3_soul-eater-pixel-soul-eater-moon/
     -->
     <script src="js/sources.js"></script>
+    <script src="js/upscaler.js"></script>
     <script src="js/export.js"></script>
     <script src="js/app.js"></script>
   </body>
