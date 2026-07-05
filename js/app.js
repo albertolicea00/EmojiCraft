@@ -61,6 +61,7 @@ async function init() {
   ensureFont(SOURCES[state.style]);
   renderSkeleton();
   bindEvents();
+  syncFmtSelector();
   window.addEventListener('hashchange', () => {
     readHash();
     setStyle(state.style);
@@ -80,6 +81,7 @@ async function init() {
     renderSkinTones();
     filterAndRender();
     updateFooterSource();
+    syncFmtSelector();
     syncSizeRow();
   } catch (err) {
     document.getElementById('skeleton').innerHTML = `
@@ -190,6 +192,24 @@ function updatePreview() {
   document.getElementById('exportControls').classList.remove('hidden');
 }
 
+function syncFmtSelector() {
+  const src = SOURCES[state.style];
+  const supportsSvg = src && !src.isSystem && !src.isPng;
+  const svgBtn = document.querySelector('#fmtGroup [data-fmt="svg"]');
+  if (svgBtn) {
+    if (supportsSvg) {
+      svgBtn.style.display = '';
+    } else {
+      svgBtn.style.display = 'none';
+      if (state.fmt === 'svg') {
+        state.fmt = 'png';
+        document.querySelectorAll('#fmtGroup .seg').forEach(b =>
+          b.classList.toggle('seg-active', b.dataset.fmt === 'png'));
+      }
+    }
+  }
+}
+
 function syncSizeRow() {
   document.getElementById('sizeRow').style.display =
     (state.fmt === 'svg' || state.zipMode) ? 'none' : '';
@@ -222,9 +242,11 @@ function setStyle(key) {
   writeHash();
   renderStyleBtns();
   ensureFont(SOURCES[key]);
+  syncFmtSelector();
   renderGrid(state.filtered);
   updateFooterSource();
   if (state.selected) updatePreview();
+  syncSizeRow();
 }
 
 function setCategory(cat) {

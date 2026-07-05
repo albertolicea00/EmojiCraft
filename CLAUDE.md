@@ -1,0 +1,1 @@
+READ THIS FILES ./AGENTS.md and ./DESIGN.md
