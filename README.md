@@ -10,7 +10,7 @@
 
 |                       |                                                |
 | --------------------- | ---------------------------------------------- |
-| 🎭 **6 styles**       | Twitter, Google, OpenMoji, Apple, Twemoji, System       |
+| 🎭 **6 styles**       | Twitter, Google, OpenMoji, Apple, System       |
 | 🔍 **Instant search** | Filter by name or keyword, sidebar by category |
 | 🖼️ **Big preview**    | Click any emoji to see it full size            |
 | 📦 **Export**         | SVG · PNG · WebP — 64 to 1024px + custom       |
@@ -112,6 +112,15 @@ To enable the weekly schedule, uncomment these lines in the workflow file:
 # schedule:
 #   - cron: '0 4 * * 0'   # every Sunday 04:00 UTC
 ```
+
+## CDN References 🔗
+
+Here are the links to the emoji datasource CDNs (v16.0.0) used or referenced in the project:
+
+- **X (Twitter):** [emoji-datasource-twitter](https://cdn.jsdelivr.net/npm/emoji-datasource-twitter@16.0.0/img/twitter/)
+- **Facebook:** [emoji-datasource-facebook](https://cdn.jsdelivr.net/npm/emoji-datasource-facebook@16.0.0/img/facebook/)
+- **Apple:** [emoji-datasource-apple](https://cdn.jsdelivr.net/npm/emoji-datasource-apple@16.0.0/img/apple/)
+- **Google:** [emoji-datasource-google](https://cdn.jsdelivr.net/npm/emoji-datasource-google@16.0.0/img/google/)
 
 ---
 
