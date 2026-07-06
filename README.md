@@ -53,7 +53,7 @@ Instead of loading thousands of individual SVG files, EmojiCraft uses **COLR/CPA
 | System | OS native emoji | zero requests |
 | X (Twitter) | PNG lazy-load | `emoji-datasource-twitter` |
 | Google | Noto Color Emoji font | Google Fonts (1 CSS request) |
-| Apple | PNG lazy-load | `emoji-datasource-apple` |
+| Apple | PNG lazy-load (SVG local) | `emoji-datasource-apple` / local assets |
 | Meta (Facebook) | PNG lazy-load | `emoji-datasource-facebook` |
 | OpenMoji | OS native (SVG on preview) | OpenMoji CDN |
 | Twemoji  | OS native (SVG on preview) | jsDelivr gh / local assets |

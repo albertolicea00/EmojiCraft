@@ -30,7 +30,7 @@ scripts/
 | system | System | OS native emoji | OS native |
 | twitter | X (Twitter) | PNG lazy (emoji-datasource-twitter) | PNG canvas |
 | google | Google | Noto Color Emoji font (Google Fonts) | SVG CDN |
-| apple | Apple | PNG lazy (emoji-datasource-apple) | PNG canvas |
+| apple | Apple | PNG lazy (CDN) or OS native (local) | PNG canvas / SVG local |
 | facebook | Meta | PNG lazy (emoji-datasource-facebook) | PNG canvas |
 | openmoji | OpenMoji | OS native emoji (SVG on preview/export) | SVG CDN |
 | twemoji | Twemoji | OS native emoji (SVG on preview/export) | SVG CDN |
@@ -50,7 +50,7 @@ When adding, renaming, or removing an emoji style, update ALL of these:
 | `README.md` | Table in "Emoji fonts — performance" section |
 | `agents.md` | `SOURCES` table in "Project Shape" section |
 
-PNG sources (twitter, apple, facebook) → CDN-only, no download script changes needed.
+PNG sources (twitter, facebook) → CDN-only, no download script changes needed. Apple supports local SVG if assets are manually provided.
 SVG sources (noto, openmoji, twemoji) → add to `ALL_STYLES` and `svg_urls_for_emoji()`.
 
 ---

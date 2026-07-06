@@ -3,7 +3,7 @@
 ───────────────────────────────────────────── */
 
 // Set to true after running `make download-assets` to serve from local files.
-const LOCAL_ASSETS = false;
+const LOCAL_ASSETS = true;
 
 const EMOJI_DATA_URL = LOCAL_ASSETS
   ? 'assets/emoji/emoji.json'
@@ -51,8 +51,10 @@ const SOURCES = {
   apple: {
     label:   'Apple',
     powered: { text: 'Apple Color Emoji', url: 'https://emojipedia.org/apple' },
-    isPng:   true,
-    url:     cp => `${DS}-apple@14.0.0/img/apple/64/${cp.toLowerCase()}.png`,
+    isPng:   !LOCAL_ASSETS,
+    url: cp => LOCAL_ASSETS
+      ? `assets/emoji/apple/${cp.toLowerCase()}.svg`
+      : `${DS}-apple@14.0.0/img/apple/64/${cp.toLowerCase()}.png`,
   },
 
   facebook: {
